@@ -19,6 +19,7 @@
 #include <osg/ApplicationUsage>
 
 #include <sstream>
+#include <iostream>
 
 #ifndef GL_MAX_TEXTURE_COORDS
 #define GL_MAX_TEXTURE_COORDS 0x8871
@@ -1041,10 +1042,10 @@ void State::setVertexAttribPointer( unsigned int index,
         if ( index >= _vertexAttribArrayList.size()) _vertexAttribArrayList.resize(index+1);
         EnabledArrayPair& eap = _vertexAttribArrayList[index];
 
-        if (!eap._enabled || eap._dirty)
+        if (true || !eap._enabled || eap._dirty) // FIXME for VAO when sharing VBO
         {
             eap._enabled = true;
-            // OSG_NOTICE<<"    _glEnableVertexAttribArray( "<<index<<" )"<<std::endl;
+            //std::cout <<"    _glEnableVertexAttribArray( "<<index<<" )"<<std::endl;
             _glEnableVertexAttribArray( index );
         }
         //if (eap._pointer != ptr || eap._normalized!=normalized || eap._dirty)

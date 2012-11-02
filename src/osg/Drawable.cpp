@@ -982,6 +982,8 @@ void Drawable::Extensions::setupGLExtensions(unsigned int contextID)
     setGLExtensionFuncPtr(_glVertexAttrib4ubv, "glVertexAttrib4ubv","glVertexAttrib4ubvARB");
     setGLExtensionFuncPtr(_glVertexAttrib4Nubv, "glVertexAttrib4Nubv","glVertexAttrib4NubvARB");
 
+setGLExtensionFuncPtr(_glGenVertexArrays, "glGenVertexArrays","glGenVertexArraysARB");
+setGLExtensionFuncPtr(_glBindVertexArray, "glBindVertexArray","glBindVertexArrayARB");
     setGLExtensionFuncPtr(_glGenBuffers, "glGenBuffers","glGenBuffersARB");
     setGLExtensionFuncPtr(_glBindBuffer, "glBindBuffer","glBindBufferARB");
     setGLExtensionFuncPtr(_glBufferData, "glBufferData","glBufferDataARB");
@@ -1289,6 +1291,18 @@ void Drawable::Extensions::glBindBuffer(GLenum target, GLuint buffer) const
 {
     if (_glBindBuffer) _glBindBuffer(target, buffer);
     else OSG_WARN<<"Error: glBindBuffer not supported by OpenGL driver"<<std::endl;
+}
+
+void Drawable::Extensions::glGenVertexArrays(GLsizei n, GLuint *arrays) const
+{
+    if (_glGenVertexArrays) _glGenVertexArrays(n, arrays);
+    else OSG_WARN<<"Error: glGenVertexArrays not supported by OpenGL driver"<<std::endl;
+}
+
+void Drawable::Extensions::glBindVertexArray(GLuint array) const
+{
+    if (_glBindVertexArray) _glBindVertexArray(array);
+    else OSG_WARN<<"Error: glBindVertexArray not supported by OpenGL driver"<<std::endl;
 }
 
 void Drawable::Extensions::glBufferData(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage) const

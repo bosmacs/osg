@@ -442,6 +442,8 @@ class OSG_EXPORT Geometry : public Drawable
         bool                            _fastPathHint;
 
         ref_ptr<Geometry>               _internalOptimizedGeometry;
+        
+        mutable GLuint _glVaoID;
 };
 
 /** Convenience function to be used for creating quad geometry with texture coords.

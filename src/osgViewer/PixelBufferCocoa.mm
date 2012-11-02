@@ -31,6 +31,11 @@ bool PixelBufferCocoa::realizeImplementation()
     NSOpenGLPixelFormatAttribute attr[32];
     int i = 0;
     
+#if defined(OSG_GL3_AVAILABLE)     
+    attr[i++] = NSOpenGLPFAOpenGLProfile; 
+    attr[i++] = NSOpenGLProfileVersion3_2Core; 
+#endif  
+
     attr[i++] = NSOpenGLPFADepthSize;
     attr[i++] = static_cast<NSOpenGLPixelFormatAttribute>(_traits->depth);
 
@@ -58,6 +63,7 @@ bool PixelBufferCocoa::realizeImplementation()
 
     attr[i++] = NSOpenGLPFAPixelBuffer; // for pbuffer usage
     attr[i++] = NSOpenGLPFAAccelerated;
+    
     attr[i] = static_cast<NSOpenGLPixelFormatAttribute>(0);
     
     // create the context

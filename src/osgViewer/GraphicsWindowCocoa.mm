@@ -1153,6 +1153,14 @@ bool GraphicsWindowCocoa::realizeImplementation()
 
     NSOpenGLPixelFormatAttribute attr[32];
     int i = 0;
+    
+#if defined(OSG_GL3_AVAILABLE)     
+    OSG_WARN << "GraphicsWindowCocoa::realizeImplementation :: creating core profile context" << std::endl;
+    attr[i++] = NSOpenGLPFAOpenGLProfile; 
+    attr[i++] = NSOpenGLProfileVersion3_2Core; 
+    
+    attr[i++] = NSOpenGLPFANoRecovery;
+#endif 
 
     attr[i++] = NSOpenGLPFADepthSize;
     attr[i++] = static_cast<NSOpenGLPixelFormatAttribute>(_traits->depth);

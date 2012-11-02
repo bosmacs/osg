@@ -59,6 +59,9 @@ GLBufferObject::GLBufferObject(unsigned int contextID, BufferObject* bufferObjec
 
     if (glObjectID==0)
     {
+        //glGenVertexArrays(1, &_glVaoID);
+        //glBindVertexArray(_glVaoID);
+    
         _extensions->glGenBuffers(1, &_glObjectID);
     }
 
@@ -173,6 +176,8 @@ void GLBufferObject::compileBuffer()
         _bufferEntries.erase(_bufferEntries.begin()+i, _bufferEntries.end());
     }
 
+    //glBindVertexArray(_glVaoID);
+
     _extensions->glBindBuffer(_profile._target, _glObjectID);
 
     if (newTotalSize > _profile._size)
@@ -232,6 +237,9 @@ void GLBufferObject::deleteGLObject()
     {
         _extensions->glDeleteBuffers(1, &_glObjectID);
         _glObjectID = 0;
+        
+        //glDeleteVertexArrays(1, &_glVaoID );
+		_glVaoID = 0;
 
         _allocatedSize = 0;
         _bufferEntries.clear();
@@ -317,10 +325,26 @@ void GLBufferObject::Extensions::setupGLExtensions(unsigned int contextID)
     setGLExtensionFuncPtr(_glGetBufferPointerv, "glGetBufferPointerv","glGetBufferPointervARB");
     setGLExtensionFuncPtr(_glBindBufferRange, "glBindBufferRange");
     setGLExtensionFuncPtr(_glBindBufferBase, "glBindBufferBase");
+    
+    setGLExtensionFuncPtr(_glGenVertexArrays, "glGenVertexArrays");
+    setGLExtensionFuncPtr(_glBindVertexArray, "glBindVertexArray");
 
     _isPBOSupported = OSG_GL3_FEATURES || osg::isGLExtensionSupported(contextID,"GL_ARB_pixel_buffer_object");
     _isUniformBufferObjectSupported = osg::isGLExtensionSupported(contextID, "GL_ARB_uniform_buffer_object");
 }
+
+void GLBufferObject::Extensions::glGenVertexArrays(GLsizei n, GLuint *arrays) const
+{
+    if (_glGenVertexArrays) _glGenVertexArrays(n, arrays);
+    else OSG_WARN<<"Error: glGenVertexArrays not supported by OpenGL driver"<<std::endl;
+}
+
+void GLBufferObject::Extensions::glBindVertexArray(GLuint array) const
+{
+    if (_glBindVertexArray) _glBindVertexArray(array);
+    else OSG_WARN<<"Error: glBindVertexArray not supported by OpenGL driver"<<std::endl;
+}
+
 
 void GLBufferObject::Extensions::glGenBuffers(GLsizei n, GLuint *buffers) const
 {
@@ -396,18 +420,24 @@ void GLBufferObject::Extensions::glGetBufferParameteriv (GLenum target, GLenum p
 
 void GLBufferObject::Extensions::glGetBufferPointerv (GLenum target, GLenum pname, GLvoid* *params) const
 {
+    //glBindVertexArray(_glVaoID);
+    
     if (_glGetBufferPointerv) _glGetBufferPointerv(target,pname,params);
     else OSG_WARN<<"Error: glGetBufferPointerv not supported by OpenGL driver"<<std::endl;
 }
 
 void GLBufferObject::Extensions::glBindBufferRange (GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size)
 {
+    //glBindVertexArray(_glVaoID);
+
     if (_glBindBufferRange) _glBindBufferRange(target, index, buffer, offset, size);
     else OSG_WARN<<"Error: glBindBufferRange not supported by OpenGL driver\n";
 }
 
 void GLBufferObject::Extensions::glBindBufferBase (GLenum target, GLuint index, GLuint buffer)
 {
+    //glBindVertexArray(_glVaoID);
+
     if (_glBindBufferBase) _glBindBufferBase(target, index, buffer);
     else OSG_WARN<<"Error: glBindBufferBase not supported by OpenGL driver\n";
 }
