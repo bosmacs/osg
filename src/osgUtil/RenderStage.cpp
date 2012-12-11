@@ -522,7 +522,7 @@ void RenderStage::runCameraSetUp(osg::RenderInfo& renderInfo)
 
             if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
             {
-                OSG_NOTICE<<"RenderStage::runCameraSetUp(), FBO setup failed, FBO status= 0x"<<std::hex<<status<<std::dec<<std::endl;
+                OSG_WARN<<"RenderStage::runCameraSetUp(), FBO setup failed, FBO status= 0x"<<std::hex<<status<<std::dec<<std::endl;
 
                 fbo_supported = false;
                 GLuint fboId = state.getGraphicsContext() ? state.getGraphicsContext()->getDefaultFboId() : 0;
@@ -552,7 +552,7 @@ void RenderStage::runCameraSetUp(osg::RenderInfo& renderInfo)
 
                     if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
                     {
-                        OSG_NOTICE << "RenderStage::runCameraSetUp(), "
+                        OSG_WARN << "RenderStage::runCameraSetUp(), "
                             "multisample FBO setup failed, FBO status = 0x"
                             << std::hex << status << std::dec << std::endl;
 
@@ -925,6 +925,13 @@ void RenderStage::drawInner(osg::RenderInfo& renderInfo,RenderLeaf*& previous, b
     {
         _fbo->apply(state);
     }
+    
+    // run callbacks *after* FBO apply
+    if (_camera && _camera->getPreDrawCallback())
+    {
+        // if we have a camera with a pre draw callback invoke it.
+        (*(_camera->getPreDrawCallback()))(renderInfo); // TODO run callbacks with FBO bound or provide a mechanism for doing so
+    }
 
     // do the drawing itself.
     RenderBin::draw(renderInfo,previous);
@@ -1202,11 +1209,11 @@ void RenderStage::draw(osg::RenderInfo& renderInfo,RenderLeaf*& previous)
 
     unsigned int originalStackSize = useState->getStateSetStackSize();
 
-    if (_camera && _camera->getPreDrawCallback())
-    {
-        // if we have a camera with a pre draw callback invoke it.
-        (*(_camera->getPreDrawCallback()))(renderInfo);
-    }
+//    if (_camera && _camera->getPreDrawCallback())
+//    {
+//        // if we have a camera with a pre draw callback invoke it.
+//        (*(_camera->getPreDrawCallback()))(renderInfo); // TODO run callbacks with FBO bound or provide a mechanism for doing so
+//    }
 
     bool doCopyTexture = _texture.valid() ?
                         (callingContext != useContext) :
