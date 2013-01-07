@@ -111,8 +111,8 @@ public:
     osg::Object* readObject();
 
     // Set and get if must be generated external reference ive files
-    void setLoadExternalReferenceFiles(bool b) {_loadExternalReferenceFiles=b;};
-    bool getLoadExternalReferenceFiles() {return _loadExternalReferenceFiles;};
+    void setLoadExternalReferenceFiles(bool b) {_loadExternalReferenceFiles=b;}
+    bool getLoadExternalReferenceFiles() {return _loadExternalReferenceFiles;}
 
 
     typedef std::map<std::string, osg::ref_ptr<osg::Image> >    ImageMap;
