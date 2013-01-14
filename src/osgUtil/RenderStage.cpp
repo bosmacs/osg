@@ -522,7 +522,7 @@ void RenderStage::runCameraSetUp(osg::RenderInfo& renderInfo)
 
             if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
             {
-	        OSG_NOTICE<<"RenderStage::runCameraSetUp(), FBO setup failed for camera '" << _camera->getName() << "', FBO status= 0x"<<std::hex<<status<<std::dec<<std::endl;
+	        OSG_WARN<<"RenderStage::runCameraSetUp(), FBO setup failed for camera '" << _camera->getName() << "', FBO status= 0x"<<std::hex<<status<<std::dec<<std::endl;
 
                 fbo_supported = false;
                 GLuint fboId = state.getGraphicsContext() ? state.getGraphicsContext()->getDefaultFboId() : 0;
