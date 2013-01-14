@@ -285,8 +285,16 @@ class OSG_EXPORT GLBufferObject : public Referenced
             void glGetBufferPointerv (GLenum target, GLenum pname, GLvoid* *params) const;
             void glBindBufferRange (GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size);
             void glBindBufferBase (GLenum target, GLuint index, GLuint buffer);
+            
+            void glGenVertexArrays (GLsizei n, GLuint *array) const;
+            void glBindVertexArray (GLuint array) const;
+            
+
 
         protected:
+
+            typedef void (GL_APIENTRY * GenVertexArraysProc) (GLsizei n, GLuint *arrays);
+            typedef void (GL_APIENTRY * BindVertexArraysProc) (GLuint array);
 
             typedef void (GL_APIENTRY * GenBuffersProc) (GLsizei n, GLuint *buffers);
             typedef void (GL_APIENTRY * BindBufferProc) (GLenum target, GLuint buffer);
@@ -316,6 +324,11 @@ class OSG_EXPORT GLBufferObject : public Referenced
             GetBufferPointervProc   _glGetBufferPointerv;
             BindBufferRangeProc     _glBindBufferRange;
             BindBufferBaseProc      _glBindBufferBase;
+            
+            GenVertexArraysProc _glGenVertexArrays;
+            BindVertexArraysProc _glBindVertexArray;
+
+
 
             bool _isPBOSupported;
             bool _isUniformBufferObjectSupported;
@@ -347,6 +360,7 @@ class OSG_EXPORT GLBufferObject : public Referenced
 
         unsigned int            _contextID;
         GLuint                  _glObjectID;
+        GLuint                  _glVaoID;
 
         BufferObjectProfile     _profile;
         unsigned int            _allocatedSize;
@@ -843,6 +857,7 @@ class OSG_EXPORT AtomicCounterBufferObject : public BufferObject
 
 inline void GLBufferObject::bindBuffer()
 {
+    //glBindVertexArray(_glVaoID);
     _extensions->glBindBuffer(_profile._target,_glObjectID);
     if (_set) _set->moveToBack(this);
 }

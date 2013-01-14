@@ -133,12 +133,14 @@
 
 #include <stdlib.h>
 #include <sstream>
+#include <regex> // requires c++11
 
 using namespace ive;
 
-
-DataOutputStream::DataOutputStream(std::ostream * ostream, const osgDB::ReaderWriter::Options* options)
+DataOutputStream::DataOutputStream(std::ostream * ostream, const osgDB::ReaderWriter::Options* options, unsigned int version)
 {
+    _version = version;
+        
     _verboseOutput = false;
 
     _includeImageMode = IMAGE_INCLUDE_DATA;
@@ -169,6 +171,15 @@ DataOutputStream::DataOutputStream(std::ostream * ostream, const osgDB::ReaderWr
     {
         std::string optionsString = _options->getOptionString();
 
+        std::regex versionPattern("overrideVersion=(\\d+)");
+        std::smatch matches;
+        if (std::regex_search(optionsString, matches, versionPattern)) {
+            std::istringstream iss;
+            iss.str(matches[0]);
+            iss >> _version;
+            OSG_NOTIFY(osg::DEBUG_INFO) << "overriding ive version from " << VERSION << " to " << _version << std::endl;
+        }
+    
         if(optionsString.find("noTexturesInIVEFile")!=std::string::npos) {
             setIncludeImageMode(IMAGE_REFERENCE_FILE);
         } else if(optionsString.find("includeImageFileInIVEFile")!=std::string::npos) {
@@ -192,6 +203,11 @@ DataOutputStream::DataOutputStream(std::ostream * ostream, const osgDB::ReaderWr
 
         _compressionLevel =  (optionsString.find("compressed")!=std::string::npos) ? 1 : 0;
         OSG_DEBUG << "ive::DataOutputStream._compressionLevel=" << _compressionLevel << std::endl;
+
+        if (_compressionLevel > 0 && _version < VERSION_0033) {
+            OSG_WARN << "compression not supported in this IVE version" << std::endl;
+            _compressionLevel = 0;
+        }
 
         std::string::size_type terrainErrorPos = optionsString.find("TerrainMaximumErrorToSizeRatio=");
         if (terrainErrorPos!=std::string::npos)
@@ -235,11 +251,12 @@ DataOutputStream::DataOutputStream(std::ostream * ostream, const osgDB::ReaderWr
     writeUInt(ENDIAN_TYPE) ;
     writeUInt(getVersion());
 
+    if (_version >= VERSION_0033) {
     writeInt(_compressionLevel);
+    }
 
     if (_compressionLevel>0)
     {
-
         _ostream = &_compressionStream;
     }
 }
@@ -1421,7 +1438,9 @@ void DataOutputStream::writeNode(const osg::Node* node)
                 OSG_WARN<<"Unknown node in Group::write(), className()="<<node->className()<<std::endl;
             }
 
+	    if (_version >= VERSION_0044) {
             ((ive::Node*)(node))->write(this);
+	    }
 
             // throwException(std::string("Unknown node in Group::write(), className()=")+node->className());
         }
@@ -1496,6 +1515,10 @@ void DataOutputStream::writeImage(IncludeImageMode mode, osg::Image *image)
                     }
                     osgDB::writeImageFile(*image, fileName);
                 }
+
+		// fix subtle behavior change from prev version -- shouldn't matter
+		if (image->getFileName().empty()) { fileName = ""; }
+
                 writeString(fileName);
             }
             else

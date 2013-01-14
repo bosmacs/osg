@@ -94,7 +94,7 @@ unsigned int DrawArrayLengths::getNumPrimitives() const
 void DrawArrayLengths::draw(State& state, bool) const
 {
     GLenum mode = _mode;
-    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE)
+    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE) || defined(OSG_GL3_AVAILABLE)
         if (_mode==GL_QUADS)
         {
             GLint first = _first;

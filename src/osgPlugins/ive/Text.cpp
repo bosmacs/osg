@@ -76,7 +76,7 @@ void Text::write(DataOutputStream* out){
     out->writeVec4(getColor());
     out->writeUInt(getDrawMode());
 
-    if ( out->getVersion() >= VERSION_0041 )
+    if ( out->getVersion() >= VERSION_0042 )
     {
         out->writeFloat(getBoundingBoxMargin());
         out->writeVec4(getBoundingBoxColor());
@@ -196,7 +196,7 @@ void Text::read(DataInputStream* in){
     setColor(in->readVec4());
     setDrawMode(in->readUInt());
 
-    if ( in->getVersion() >= VERSION_0041 )
+    if ( in->getVersion() >= VERSION_0042 )
     {
         setBoundingBoxMargin(in->readFloat());
         setBoundingBoxColor(in->readVec4());

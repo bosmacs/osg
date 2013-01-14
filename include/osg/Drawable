@@ -650,7 +650,9 @@ class OSG_EXPORT Drawable : public Object
             void glGetBufferParameteriv (GLenum target, GLenum pname, GLint *params) const;
             void glGetBufferPointerv (GLenum target, GLenum pname, GLvoid* *params) const;
 
-
+            void glGenVertexArrays (GLsizei n, GLuint *array) const;
+            void glBindVertexArray (GLuint array) const;
+            
             void glGenOcclusionQueries( GLsizei n, GLuint *ids ) const;
             void glDeleteOcclusionQueries( GLsizei n, const GLuint *ids ) const;
             GLboolean glIsOcclusionQuery( GLuint id ) const;
@@ -704,6 +706,9 @@ class OSG_EXPORT Drawable : public Object
             typedef GLboolean (GL_APIENTRY * UnmapBufferProc) (GLenum target);
             typedef void (GL_APIENTRY * GetBufferParameterivProc) (GLenum target, GLenum pname, GLint *params);
             typedef void (GL_APIENTRY * GetBufferPointervProc) (GLenum target, GLenum pname, GLvoid* *params);
+            
+            typedef void (GL_APIENTRY * GenVertexArraysProc) (GLsizei n, GLuint *arrays);
+            typedef void (GL_APIENTRY * BindVertexArraysProc) (GLuint array);
 
             typedef void (GL_APIENTRY * GenOcclusionQueriesProc) ( GLsizei n, GLuint *ids );
             typedef void (GL_APIENTRY * DeleteOcclusionQueriesProc) ( GLsizei n, const GLuint *ids );
@@ -776,6 +781,9 @@ class OSG_EXPORT Drawable : public Object
             UnmapBufferProc         _glUnmapBuffer;
             GetBufferParameterivProc _glGetBufferParameteriv;
             GetBufferPointervProc   _glGetBufferPointerv;
+            
+            GenVertexArraysProc _glGenVertexArrays;
+            BindVertexArraysProc _glBindVertexArray;
 
             GenOcclusionQueriesProc _glGenOcclusionQueries;
             DeleteOcclusionQueriesProc _glDeleteOcclusionQueries;

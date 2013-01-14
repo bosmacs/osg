@@ -15,7 +15,7 @@ class Exception : public osg::Referenced
 public:
 	Exception(std::string error);
 	~Exception();
-	const std::string& getError() const { return _error; };
+	const std::string& getError() const { return _error; }
 private:
 	std::string _error;
 };

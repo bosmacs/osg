@@ -33,12 +33,12 @@ namespace ive {
 class DataOutputStream{
 
 public:
-    DataOutputStream(std::ostream* ostream, const osgDB::ReaderWriter::Options* options);
+    DataOutputStream(std::ostream* ostream, const osgDB::ReaderWriter::Options* options, unsigned int version = VERSION);
     virtual ~DataOutputStream();
 
     const osgDB::ReaderWriter::Options* getOptions() const { return _options.get(); }
 
-    unsigned int getVersion() { return VERSION; }
+    unsigned int getVersion() { return _version; }
 
     void writeBool(bool b);
     void writeChar(char c);
@@ -114,21 +114,21 @@ public:
     const std::string& getWriteDirectory() const { return _writeDirectory; }
 
     // Set and get include image data in stream
-    void setIncludeImageMode(IncludeImageMode mode) {_includeImageMode=mode;};
-    IncludeImageMode getIncludeImageMode() const {return _includeImageMode;};
+    void setIncludeImageMode(IncludeImageMode mode) {_includeImageMode=mode;}
+    IncludeImageMode getIncludeImageMode() const {return _includeImageMode;}
     IncludeImageMode getIncludeImageMode(const osg::Image* image) const;
 
     // Set and get include external references in stream
-    void setIncludeExternalReferences(bool b) {_includeExternalReferences=b;};
-    bool getIncludeExternalReferences() const {return _includeExternalReferences;};
+    void setIncludeExternalReferences(bool b) {_includeExternalReferences=b;}
+    bool getIncludeExternalReferences() const {return _includeExternalReferences;}
 
     // Set and get if must be generated external reference ive files
-    void setWriteExternalReferenceFiles(bool b) {_writeExternalReferenceFiles=b;};
-    bool getWriteExternalReferenceFiles() const {return _writeExternalReferenceFiles;};
+    void setWriteExternalReferenceFiles(bool b) {_writeExternalReferenceFiles=b;}
+    bool getWriteExternalReferenceFiles() const {return _writeExternalReferenceFiles;}
 
     // Set and get if must be used original external reference files
-    void setUseOriginalExternalReferences(bool b) {_useOriginalExternalReferences=b;};
-    bool getUseOriginalExternalReferences() const {return _useOriginalExternalReferences;};
+    void setUseOriginalExternalReferences(bool b) {_useOriginalExternalReferences=b;}
+    bool getUseOriginalExternalReferences() const {return _useOriginalExternalReferences;}
 
     // Set and get if export texture files during write
     void setOutputTextureFiles(bool flag) { _outputTextureFiles = flag; }
@@ -208,6 +208,8 @@ public:
     ExternalFileWrittenMap _externalFileWritten;
 
     osg::ref_ptr<Exception> _exception;
+    
+    unsigned int _version;
 };
 
 }

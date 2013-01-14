@@ -16,6 +16,7 @@
 #include <osg/ArrayDispatchers>
 #include <osg/Notify>
 
+
 using namespace osg;
 
 const Geometry::ArrayData Geometry::s_InvalidArrayData;
@@ -989,6 +990,8 @@ void Geometry::compileGLObjects(RenderInfo& renderInfo) const
         // unbind the BufferObjects
         extensions->glBindBuffer(GL_ARRAY_BUFFER_ARB,0);
         extensions->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
+        
+        //glBindVertexArray(0);
 
     }
     else
@@ -1007,13 +1010,20 @@ void Geometry::drawImplementation(RenderInfo& renderInfo) const
     }
 #endif
 
+#if 0
     if (_internalOptimizedGeometry.valid())
     {
         _internalOptimizedGeometry->drawImplementation(renderInfo);
         return;
     }
+    
+#endif
 
     State& state = *renderInfo.getState();
+    
+        unsigned int contextID = state.getContextID();
+        GLBufferObject::Extensions* extensions = GLBufferObject::getExtensions(contextID, true);
+        if (!extensions) return;
 
     bool checkForGLErrors = state.getCheckForGLErrors()==osg::State::ONCE_PER_ATTRIBUTE;
     if (checkForGLErrors) state.checkGLErrors("start of Geometry::drawImplementation()");
@@ -1050,6 +1060,14 @@ void Geometry::drawImplementation(RenderInfo& renderInfo) const
 
     if (useFastPath)
     {
+        //if (usingVertexBufferObjects) {
+            if (_glVaoID == 0) {
+                extensions->glGenVertexArrays(1, &_glVaoID);
+            }
+            
+            extensions->glBindVertexArray(_glVaoID);
+        //}
+        
         // set up arrays
         if( _vertexData.array.valid() )
             state.setVertexPointer(_vertexData.array.get());
@@ -1084,6 +1102,10 @@ void Geometry::drawImplementation(RenderInfo& renderInfo) const
                 }
             }
         }
+        
+        //glBindVertexArray(0);
+        //glDeleteVertexArrays(1, &_glVaoID);
+        //_glVaoID = 0;
     }
     else
     {
@@ -1119,6 +1141,9 @@ void Geometry::drawImplementation(RenderInfo& renderInfo) const
 
         if (useFastPath)
         {
+            //if (usingVertexBufferObjects) {
+                // glBindVertexArray(_glVaoID);
+            //}
             primitiveset->draw(state, usingVertexBufferObjects);
         }
         else
@@ -2720,18 +2745,22 @@ Geometry* osg::createTexturedQuadGeometry(const Vec3& corner,const Vec3& widthVe
 {
     Geometry* geom = new Geometry;
 
-    Vec3Array* coords = new Vec3Array(4);
+    Vec3Array* coords = new Vec3Array(6);
     (*coords)[0] = corner+heightVec;
     (*coords)[1] = corner;
     (*coords)[2] = corner+widthVec;
-    (*coords)[3] = corner+widthVec+heightVec;
+    (*coords)[3] = corner+widthVec;
+    (*coords)[4] = corner+widthVec+heightVec;
+    (*coords)[5] = corner+heightVec;
     geom->setVertexArray(coords);
 
-    Vec2Array* tcoords = new Vec2Array(4);
+    Vec2Array* tcoords = new Vec2Array(6);
     (*tcoords)[0].set(l,t);
     (*tcoords)[1].set(l,b);
     (*tcoords)[2].set(r,b);
-    (*tcoords)[3].set(r,t);
+    (*tcoords)[3].set(r,b);
+    (*tcoords)[4].set(r,t);
+    (*tcoords)[5].set(l,t);
     geom->setTexCoordArray(0,tcoords);
 
     osg::Vec4Array* colours = new osg::Vec4Array(1);
@@ -2745,7 +2774,9 @@ Geometry* osg::createTexturedQuadGeometry(const Vec3& corner,const Vec3& widthVe
     geom->setNormalArray(normals);
     geom->setNormalBinding(Geometry::BIND_OVERALL);
 
-#if defined(OSG_GLES1_AVAILABLE) || !defined(OSG_GLES2_AVAILABLE)
+#if defined(OSG_GL3_AVAILABLE) \
+    || (defined(OSG_GLES1_AVAILABLE) || !defined(OSG_GLES2_AVAILABLE))
+
     DrawElementsUByte* elems = new DrawElementsUByte(PrimitiveSet::TRIANGLES);
     elems->push_back(0);
     elems->push_back(1);
@@ -2755,6 +2786,8 @@ Geometry* osg::createTexturedQuadGeometry(const Vec3& corner,const Vec3& widthVe
     elems->push_back(3);
     elems->push_back(0);
     geom->addPrimitiveSet(elems);
+
+    //     geom->addPrimitiveSet(new DrawArrays(PrimitiveSet::TRIANGLES,0,6));
 #else
     geom->addPrimitiveSet(new DrawArrays(PrimitiveSet::QUADS,0,4));
 #endif
