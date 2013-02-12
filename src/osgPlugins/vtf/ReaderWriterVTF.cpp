@@ -162,7 +162,7 @@ struct DXT1TexelsBlock
 };
 
 
-bool ConvertImageFormat(unsigned int vtfFormat, int& internalFormat,
+bool ConvertImageFormat(VTFImageFormat vtfFormat, int& internalFormat,
                         int& pixelFormat, int& dataType)
 {
     bool supported;
@@ -470,7 +470,7 @@ osg::Image* ReadVTFFile(std::istream& _istream)
     lrSize = 0;
     if ((s > 0) && (t > 0))
     {
-        supported = ConvertImageFormat(vtf_header.low_res_image_format,
+        supported = ConvertImageFormat((VTFImageFormat)vtf_header.low_res_image_format,
                                        internalFormat, pixelFormat, dataType);
 
         // If we don't recognize the format, we can't locate the real image
@@ -501,7 +501,7 @@ osg::Image* ReadVTFFile(std::istream& _istream)
 
     // Now, get the internal format, pixel format, and data type from the
     // full-size image format, and check whether the format is supported
-    supported = ConvertImageFormat(vtf_header.image_format, internalFormat,
+    supported = ConvertImageFormat((VTFImageFormat)vtf_header.image_format, internalFormat,
                                    pixelFormat, dataType);
 
     // Bail if the format isn't supported

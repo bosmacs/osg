@@ -63,7 +63,8 @@ bool Object::load(std::istream& fin)
 {
     // read header
     char buf[256];
-    if (fin.getline(buf, sizeof(buf)) == 0) {
+    fin.getline(buf, sizeof(buf));
+    if (fin.eofbit|fin.failbit|fin.badbit) {
         OSG_WARN << "Failed to read DirectX header\n";
         return false;
     }

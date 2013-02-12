@@ -92,7 +92,7 @@ bool FFmpegDecoder::open(const std::string & filename, FFmpegParameters* paramet
                 OSG_NOTICE<<"Failed to find input format: "<<format<<std::endl;
             }
 
-            int error = av_open_input_file(&p_format_context, filename.c_str(), iformat, 0, &formatParams);
+            long error = av_open_input_file(&p_format_context, filename.c_str(), iformat, 0, &formatParams);
             if (error != 0)
             {
                 std::string error_str;
