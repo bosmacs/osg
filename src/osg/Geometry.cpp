@@ -2749,18 +2749,14 @@ Geometry* osg::createTexturedQuadGeometry(const Vec3& corner,const Vec3& widthVe
     (*coords)[0] = corner+heightVec;
     (*coords)[1] = corner;
     (*coords)[2] = corner+widthVec;
-    (*coords)[3] = corner+widthVec;
-    (*coords)[4] = corner+widthVec+heightVec;
-    (*coords)[5] = corner+heightVec;
+    (*coords)[3] = corner+widthVec+heightVec;
     geom->setVertexArray(coords);
 
     Vec2Array* tcoords = new Vec2Array(6);
     (*tcoords)[0].set(l,t);
     (*tcoords)[1].set(l,b);
     (*tcoords)[2].set(r,b);
-    (*tcoords)[3].set(r,b);
-    (*tcoords)[4].set(r,t);
-    (*tcoords)[5].set(l,t);
+    (*tcoords)[3].set(r,t);
     geom->setTexCoordArray(0,tcoords);
 
     osg::Vec4Array* colours = new osg::Vec4Array(1);
@@ -2774,8 +2770,7 @@ Geometry* osg::createTexturedQuadGeometry(const Vec3& corner,const Vec3& widthVe
     geom->setNormalArray(normals);
     geom->setNormalBinding(Geometry::BIND_OVERALL);
 
-#if defined(OSG_GL3_AVAILABLE) \
-    || (defined(OSG_GLES1_AVAILABLE) || !defined(OSG_GLES2_AVAILABLE))
+#if defined(OSG_GL3_AVAILABLE) || (defined(OSG_GLES1_AVAILABLE) || !defined(OSG_GLES2_AVAILABLE))
 
     DrawElementsUByte* elems = new DrawElementsUByte(PrimitiveSet::TRIANGLES);
     elems->push_back(0);
