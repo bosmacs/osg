@@ -46,6 +46,8 @@ Geometry::Geometry()
 
     _fastPath = false;
     _fastPathHint = true;
+    
+    _glVaoID = 0;
 }
 
 Geometry::Geometry(const Geometry& geometry,const CopyOp& copyop):
