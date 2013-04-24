@@ -133,7 +133,16 @@
 
 #include <stdlib.h>
 #include <sstream>
+
+#if 1
 #include <regex> // requires c++11
+#else
+#include <boost/tr1/regex.hpp>
+namespace std {
+    using tr1::regex;
+    using tr1::smatch;
+}
+#endif
 
 using namespace ive;
 
@@ -175,7 +184,7 @@ DataOutputStream::DataOutputStream(std::ostream * ostream, const osgDB::ReaderWr
         std::smatch matches;
         if (std::regex_search(optionsString, matches, versionPattern)) {
             std::istringstream iss;
-            iss.str(matches[0]);
+            iss.str(matches[1]);
             iss >> _version;
             OSG_NOTIFY(osg::DEBUG_INFO) << "overriding ive version from " << VERSION << " to " << _version << std::endl;
         }
