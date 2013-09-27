@@ -38,7 +38,7 @@ unsigned int PrimitiveSet::getNumPrimitives() const
 
 void DrawArrays::draw(State& state, bool) const
 {
-#if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE)
+#if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE) || defined(OSG_GL3_AVAILABLE)
     GLenum mode = _mode;
     if (_mode==GL_QUADS)
     {
@@ -117,6 +117,7 @@ void DrawArrayLengths::draw(State& state, bool) const
         itr!=end();
         ++itr)
     {
+        if (mode == GL_QUADS) continue;
         glDrawArrays(mode,first,*itr);
         first += *itr;
     }
@@ -167,7 +168,7 @@ DrawElementsUByte::~DrawElementsUByte()
 void DrawElementsUByte::draw(State& state, bool useVertexBufferObjects) const
 {
     GLenum mode = _mode;
-    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE)
+    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE) || defined(OSG_GL3_AVAILABLE)
         if (mode==GL_POLYGON) mode = GL_TRIANGLE_FAN;
         if (mode==GL_QUAD_STRIP) mode = GL_TRIANGLE_STRIP;
     #endif
@@ -223,7 +224,7 @@ DrawElementsUShort::~DrawElementsUShort()
 void DrawElementsUShort::draw(State& state, bool useVertexBufferObjects) const
 {
     GLenum mode = _mode;
-    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE)
+    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE) || defined(OSG_GL3_AVAILABLE)
         if (mode==GL_POLYGON) mode = GL_TRIANGLE_FAN;
         if (mode==GL_QUAD_STRIP) mode = GL_TRIANGLE_STRIP;
     #endif
@@ -279,7 +280,7 @@ DrawElementsUInt::~DrawElementsUInt()
 void DrawElementsUInt::draw(State& state, bool useVertexBufferObjects) const
 {
     GLenum mode = _mode;
-    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE)
+    #if defined(OSG_GLES1_AVAILABLE) || defined(OSG_GLES2_AVAILABLE) || defined(OSG_GL3_AVAILABLE)
         if (mode==GL_POLYGON) mode = GL_TRIANGLE_FAN;
         if (mode==GL_QUAD_STRIP) mode = GL_TRIANGLE_STRIP;
     #endif

@@ -32,7 +32,6 @@ void StateGraph::reset()
   * Leaves children intact, and ready to be populated again.*/
 void StateGraph::clean()
 {
-
     // clean local drawables etc.
     _leaves.clear();
 
@@ -43,7 +42,6 @@ void StateGraph::clean()
     {
         itr->second->clean();
     }
-
 }
 
 /** recursively prune the StateGraph of empty children.*/
@@ -70,5 +68,4 @@ void StateGraph::prune()
     {
         _children.erase(*eitr);
     }
-
 }

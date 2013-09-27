@@ -38,7 +38,6 @@ SET(TARGET_H
     ${HEADER_PATH}/BufferIndexBinding
     ${HEADER_PATH}/BufferObject
     ${HEADER_PATH}/Camera
-    ${HEADER_PATH}/CameraNode
     ${HEADER_PATH}/CameraView
     ${HEADER_PATH}/ClampColor
     ${HEADER_PATH}/ClearNode
@@ -117,6 +116,7 @@ SET(TARGET_H
     ${HEADER_PATH}/OccluderNode
     ${HEADER_PATH}/OcclusionQueryNode
     ${HEADER_PATH}/OperationThread
+    ${HEADER_PATH}/PatchParameter
     ${HEADER_PATH}/PagedLOD
     ${HEADER_PATH}/Plane
     ${HEADER_PATH}/Point
@@ -127,6 +127,7 @@ SET(TARGET_H
     ${HEADER_PATH}/Polytope
     ${HEADER_PATH}/PositionAttitudeTransform
     ${HEADER_PATH}/PrimitiveSet
+    ${HEADER_PATH}/PrimitiveRestartIndex
     ${HEADER_PATH}/Program
     ${HEADER_PATH}/Projection
     ${HEADER_PATH}/ProxyNode
@@ -134,7 +135,9 @@ SET(TARGET_H
     ${HEADER_PATH}/Referenced
     ${HEADER_PATH}/ref_ptr
     ${HEADER_PATH}/RenderInfo
+    ${HEADER_PATH}/SampleMaski
     ${HEADER_PATH}/Scissor
+    ${HEADER_PATH}/ScriptEngine
     ${HEADER_PATH}/Sequence
     ${HEADER_PATH}/ShadeModel
     ${HEADER_PATH}/Shader
@@ -164,6 +167,7 @@ SET(TARGET_H
     ${HEADER_PATH}/Texture2DMultisample
     ${HEADER_PATH}/Texture2DArray
     ${HEADER_PATH}/Texture3D
+    ${HEADER_PATH}/TextureBuffer
     ${HEADER_PATH}/TextureCubeMap
     ${HEADER_PATH}/TextureRectangle
     ${HEADER_PATH}/Timer
@@ -178,18 +182,29 @@ SET(TARGET_H
     ${HEADER_PATH}/Vec2b
     ${HEADER_PATH}/Vec2d
     ${HEADER_PATH}/Vec2f
+    ${HEADER_PATH}/Vec2i
     ${HEADER_PATH}/Vec2s
+    ${HEADER_PATH}/Vec2ub
+    ${HEADER_PATH}/Vec2ui
+    ${HEADER_PATH}/Vec2us
     ${HEADER_PATH}/Vec3
     ${HEADER_PATH}/Vec3b
     ${HEADER_PATH}/Vec3d
     ${HEADER_PATH}/Vec3f
+    ${HEADER_PATH}/Vec3i
     ${HEADER_PATH}/Vec3s
+    ${HEADER_PATH}/Vec3ub
+    ${HEADER_PATH}/Vec3ui
+    ${HEADER_PATH}/Vec3us
     ${HEADER_PATH}/Vec4
     ${HEADER_PATH}/Vec4b
     ${HEADER_PATH}/Vec4d
     ${HEADER_PATH}/Vec4f
+    ${HEADER_PATH}/Vec4i
     ${HEADER_PATH}/Vec4s
     ${HEADER_PATH}/Vec4ub
+    ${HEADER_PATH}/Vec4ui
+    ${HEADER_PATH}/Vec4us
     ${HEADER_PATH}/Version
     ${HEADER_PATH}/VertexProgram
     ${HEADER_PATH}/View
@@ -292,6 +307,7 @@ SET(TARGET_SRC
     OccluderNode.cpp
     OcclusionQueryNode.cpp
     OperationThread.cpp
+    PatchParameter.cpp
     PagedLOD.cpp
     Point.cpp
     PointSprite.cpp
@@ -300,12 +316,15 @@ SET(TARGET_SRC
     PolygonStipple.cpp
     PositionAttitudeTransform.cpp
     PrimitiveSet.cpp
+    PrimitiveRestartIndex.cpp
     Program.cpp
     Projection.cpp
     ProxyNode.cpp
     Quat.cpp
     Referenced.cpp
+    SampleMaski.cpp
     Scissor.cpp
+    ScriptEngine.cpp
     Sequence.cpp
     ShadeModel.cpp
     Shader.cpp
@@ -333,6 +352,7 @@ SET(TARGET_SRC
     Texture2DMultisample.cpp
     Texture3D.cpp
     Texture.cpp
+    TextureBuffer.cpp
     TextureCubeMap.cpp
     TextureRectangle.cpp
     Timer.cpp
@@ -379,13 +399,13 @@ SET(TARGET_SRC
 SET(TARGET_LIBRARIES OpenThreads)
 
 SET(TARGET_EXTERNAL_LIBRARIES
-    ${CMAKE_THREAD_LIBS_INIT}    
-    ${MATH_LIBRARY} 
-    ${RT_LIBRARY} 
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${MATH_LIBRARY}
+    ${RT_LIBRARY}
     ${DL_LIBRARY}
 )
 
-#LINK_INTERNAL(${LIB_NAME}     
+#LINK_INTERNAL(${LIB_NAME}
 #    OpenThreads
 #)
 #LINK_EXTERNAL(${LIB_NAME} ${CMAKE_THREAD_LIBS_INIT}    ${MATH_LIBRARY} ${RT_LIBRARY} ${DL_LIBRARY})

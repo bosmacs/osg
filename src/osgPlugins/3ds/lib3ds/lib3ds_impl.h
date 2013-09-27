@@ -64,6 +64,7 @@ typedef signed __int32 int32_t;
 #define LIB3DS_DEG_TO_RAD(x) ((LIB3DS_PI/180.0)*(x))
 
 #ifdef __cplusplus
+#include <cmath>
 extern "C" {
 #endif
 

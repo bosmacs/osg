@@ -119,6 +119,8 @@ public:
         unsigned int getIgnoreHandledEventsMask() const { return _ignoreHandledEventsMask; };
 
 protected:
+        virtual ~GUIEventHandler() {}
+
         unsigned int _ignoreHandledEventsMask;
 
 };

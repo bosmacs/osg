@@ -249,7 +249,12 @@ const char* invalidNames[] =
     "Vec3",
     "Plugin",
     "Get",
-    "LightSource"
+    "LightSource",
+    "SlideEventHandler",
+    "GraphicsContext*",
+    "Apple",
+    "GeometryNew",
+    "FrameBufferObject"
 };
 
 
@@ -261,6 +266,7 @@ struct TypoCorrection
 
 TypoCorrection typoCorrections[] =
 {
+    {"Cheaev",         "Chebaev"},
     {"Alaxandre",      "Alexandre"},
     {"Aderian",        "Adrian"},
     {"Adndre",         "Andre"},
@@ -270,6 +276,7 @@ TypoCorrection typoCorrections[] =
     {"AndrÃ©",         "André"},
     {"Antione",        "Antoine"},
     {"Antonoine",      "Antoine"},
+    {"Aurelein",       "Aurelien"},
     {"Atr",            "Art"},
     {"Baverage",       "Beverage"},
     {"Bistroviae",     "Bistrovic"},
@@ -315,6 +322,7 @@ TypoCorrection typoCorrections[] =
     {"Hertlien",       "Hertlein"},
     {"Hatwig",         "Hartwig"},
     {"Hauknes",        "Haukness"},
+    {"Hunber",        "Huber"},
     {"Hi",             "He"},
     {"Hooper",         "Hopper"},
     {"Inverson",       "Iverson"},
@@ -460,17 +468,27 @@ struct NameCorrection
 
 NameCorrection nameCorrections[] =
 {
+    {"FrancoisTigeot","",
+     "Francois", "Tigeot"},
+    {"Juan","Manuel",
+     "Juan", "Manuel Alvarez"},
+    {"Jaap","Gas",
+     "Jaap", "Glas"},
     {"Philip","Lamp",
      "Philip", "Lamb"},
     {"Dimi","Christop",
      "Dimi", "Christopoulos"},
     {"Jorge","Ciges",
-     "Jorge", "Izquierdo"},
+     "Jorge", "Izquierdo Ciges"},
+    {"Jorge","Izquierdo",
+     "Jorge", "Izquierdo Ciges"},
     {"Rafa","Gata",
      "Rafa", "Gaitan"},
     {"Sukender","I",
      "Sukender", ""},
     {"Sukender","Here",
+     "Sukender", ""},
+    {"Sukender","Fix",
      "Sukender", ""},
     {"Ewe","Woessner",
      "Uwe", "Woessner"},
@@ -486,6 +504,8 @@ NameCorrection nameCorrections[] =
      "Thomas",         "Hogarth"},
     {"Marin",          "Lavery",
      "Martin",         "Lavery"},
+    {"Michael",        "Bach",
+     "Michael",        "Bach Jensen"},
     {"Nguyen",         "Van",
      "Nguyen",         "Van Truong"},
     {"Thom",           "Carlo",

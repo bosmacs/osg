@@ -123,6 +123,9 @@ class OSGGA_EXPORT KeySwitchMatrixManipulator : public CameraManipulator
 
         /** Get the keyboard and mouse usage of this manipulator.*/
         virtual void getUsage(osg::ApplicationUsage& usage) const;
+        
+    protected:
+        virtual ~KeySwitchMatrixManipulator() { }
 
     private:
 

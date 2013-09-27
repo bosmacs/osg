@@ -1074,6 +1074,9 @@ void GraphicsWindowCocoa::init()
 
     _updateContext = false;
     _valid = _initialized = true;
+    
+    // make sure the event queue has the correct window rectangle size and input range
+    getEventQueue()->syncWindowRectangleWithGraphcisContext();
 }
 
 
@@ -1249,6 +1252,9 @@ bool GraphicsWindowCocoa::realizeImplementation()
     // Cocoa's origin is bottom/left:
     getEventQueue()->getCurrentEventState()->setMouseYOrientation(osgGA::GUIEventAdapter::Y_INCREASING_UPWARDS);
 
+    // make sure the event queue has the correct window rectangle size and input range
+    getEventQueue()->syncWindowRectangleWithGraphcisContext();
+
     _valid = _initialized = _realized = true;
     return _valid;
 }
@@ -1329,10 +1335,10 @@ void GraphicsWindowCocoa::swapBuffersImplementation()
 // checkEvents
 // process all pending events
 // ----------------------------------------------------------------------------------------------------------
-void GraphicsWindowCocoa::checkEvents()
+bool GraphicsWindowCocoa::checkEvents()
 {
     if (!_checkForEvents)
-        return;
+        return false;
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -1364,6 +1370,8 @@ void GraphicsWindowCocoa::checkEvents()
     }
 
     [pool release];
+    
+    return !(getEventQueue()->empty());
 }
 
 

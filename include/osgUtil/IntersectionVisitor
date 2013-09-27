@@ -84,12 +84,11 @@ class Intersector : public osg::Referenced
 
         inline bool reachedLimit() { return _intersectionLimit == LIMIT_ONE && containsIntersections(); }
 
-   protected:
+protected:
 
-        CoordinateFrame _coordinateFrame;
+        CoordinateFrame   _coordinateFrame;
         IntersectionLimit _intersectionLimit;
-        unsigned int    _disabledCount;
-
+        unsigned int      _disabledCount;
 };
 
 
@@ -152,7 +151,7 @@ class OSGUTIL_EXPORT IntersectionVisitor : public osg::NodeVisitor
 
         IntersectionVisitor(Intersector* intersector=0, ReadCallback* readCallback=0);
 
-        META_NodeVisitor("osgUtil","IntersectionVisitor")
+        META_NodeVisitor(osgUtil, IntersectionVisitor)
 
         virtual void reset();
 
