@@ -1535,9 +1535,12 @@ void State::drawQuads(GLint first, GLsizei count, GLsizei primCount)
         // if (array!=0) return;
 
         // OSG_NOTICE<<"  glDrawElements(GL_TRIANGLES, "<<numIndices<<", GL_UNSIGNED_SHORT, "<<&(indices[base])<<")"<<std::endl;
-        //glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, &(indices[offsetFirst]), primCount);
-        
+
+#ifndef __APPLE__
+        glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, &(indices[offsetFirst]), primCount);
+#else
         OSG_NOTICE<<"won't draw quad without index buffer object"<<std::endl;
+#endif
     }
     else
     {

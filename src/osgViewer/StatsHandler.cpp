@@ -28,6 +28,32 @@
 namespace osgViewer
 {
 
+static const char* statsVertShaderSource =
+  "#version 150\n\n"
+  "uniform mat4 osg_ModelViewProjectionMatrix;\n\n"
+  "in vec4 osg_Vertex;\n"
+  "in vec4 osg_Color;\n\n"
+  "in vec4 osg_MultiTexCoord0;\n\n"
+  "out vec4 vColor;\n\n"
+  "out vec2 vTexCoord;\n\n"
+  "void main() {\n"
+  "  gl_Position = osg_ModelViewProjectionMatrix * osg_Vertex;\n"
+  "  vColor = osg_Color;\n"
+  "  vTexCoord = osg_MultiTexCoord0.st;\n"
+  "}\n";
+
+static const char* statsFragShaderSource =
+  "#version 150\n\n"
+  "uniform sampler2D tex;\n\n"
+  "in vec4 vColor;\n\n"
+  "in vec2 vTexCoord;\n\n"
+  "out vec4 FragColor;\n\n"
+  "void main() {\n"
+  "  vec4 sample = texture(tex, vTexCoord);\n"
+  "  FragColor = vColor + sample;\n"
+  "  FragColor.a = 1.0;\n"
+  "}\n";
+  
 
 StatsHandler::StatsHandler():
     _keyEventTogglesOnScreenStats('s'),
@@ -52,6 +78,19 @@ StatsHandler::StatsHandler():
     _camera = new osg::Camera;
     _camera->setRenderer(new Renderer(_camera.get()));
     _camera->setProjectionResizePolicy(osg::Camera::FIXED);
+
+    osg::Shader* statsVertShader = new osg::Shader(osg::Shader::VERTEX, statsVertShaderSource);
+    statsVertShader->setName("Stats Vertex Shader");
+    osg::Shader* statsFragShader = new osg::Shader(osg::Shader::FRAGMENT, statsFragShaderSource);
+    statsFragShader->setName("Stats Fragment Shader");
+
+    osg::Program* statsProgram = new osg::Program;
+    statsProgram->setName("Stats Program");
+    statsProgram->addShader(statsVertShader);
+    statsProgram->addShader(statsFragShader);
+
+    _camera->getOrCreateStateSet()->setAttribute(statsProgram);
+    _camera->getOrCreateStateSet()->addUniform(new osg::Uniform("tex", 0));
 }
 
 bool StatsHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)

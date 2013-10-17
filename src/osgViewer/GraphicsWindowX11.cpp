@@ -316,8 +316,8 @@ bool GraphicsWindowX11::createVisualInfo()
             OSG_NOTICE<<"GraphicsWindowX11::createVisualInfo() failed."<<std::endl;
             return false;
         }
-
-    #else
+	
+    #else 
 
         typedef std::vector<int> Attributes;
         Attributes attributes;
@@ -810,7 +810,47 @@ void GraphicsWindowX11::init()
 
     #else
 
+#if 0 // GL 3 Core Profile
+	OSG_NOTICE << "Creating core profile context" << std::endl;
+
+	int attribs[] = {
+	  GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+	  GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+	  GLX_CONTEXT_MINOR_VERSION_ARB, 2,
+	  0
+	};
+
+	int configCount = 0;
+	int fb_attrib[] = {
+	  GLX_DOUBLEBUFFER, True,
+          GLX_RED_SIZE, 8,
+          GLX_BLUE_SIZE, 8,
+          GLX_GREEN_SIZE, 8,
+          GLX_ALPHA_SIZE, 8,
+	  GLX_DEPTH_SIZE, 24,
+	  GLX_STENCIL_SIZE, 8,
+	  0
+	};
+
+        GLXFBConfig* config = glXChooseFBConfig(_display, _traits->screenNum, fb_attrib, &configCount);
+
+	if (configCount == 0 || !config) {
+	  OSG_FATAL << "Error chosing FBConfig" << std::endl;
+	} else {
+	  OSG_NOTICE << configCount << " X FBConfig's available" << std::endl;
+	}
+
+	_visualInfo = glXGetVisualFromFBConfig(_display, config[0]);
+	
+        _context = glXCreateContextAttribsARB( _display, config[0], sharedContext, True, attribs );
+
+	if (_context) {
+	  OSG_NOTICE << "core profile context created" << std::endl;
+	}
+
+#else
         _context = glXCreateContext( _display, _visualInfo, sharedContext, True );
+#endif
 
         if (!_context)
         {
@@ -858,7 +898,7 @@ bool GraphicsWindowX11::createWindow()
 
     XSetWindowAttributes swatt;
     swatt.colormap = XCreateColormap( _display, _parent, _visualInfo->visual, AllocNone);
-    //swatt.colormap = DefaultColormap( _dpy, 10 );
+    //swatt.colormap = DefaultColormap( _display, 10 );
     swatt.background_pixel = 0;
     swatt.border_pixel = 0;
     swatt.event_mask =  0;
@@ -1078,7 +1118,12 @@ bool GraphicsWindowX11::makeCurrentImplementation()
         checkEGLError("after eglMakeCurrent()");
         return result;
     #else
-        return glXMakeCurrent( _display, _window, _context )==True;
+        bool result = glXMakeCurrent( _display, _window, _context )==True;
+	if (!result) {
+	  OSG_FATAL << "error in glXMakeCurrent" << std::endl;
+	}
+
+	return result;
     #endif
 }
 

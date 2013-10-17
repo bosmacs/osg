@@ -303,7 +303,9 @@ bool Uniform::isCompatibleType( Type t ) const
     if( getGlApiType(t) == getGlApiType(getType()) ) return true;
 
     OSG_WARN << "Cannot assign between Uniform types " << getTypename(t)
-             << " and " << getTypename(getType()) << std::endl;
+             << " and " << getTypename(getType()) 
+             << " for uniform '" << getName() << "'"
+	     << std::endl;
     return false;
 }
 
@@ -315,7 +317,9 @@ bool Uniform::isCompatibleType( Type t1, Type t2 ) const
     if( getGlApiType(t2) == getGlApiType(getType()) ) return true;
 
     OSG_WARN << "Cannot assign between Uniform types " << getTypename(t1) << " or " << getTypename(t2)
-             << " and " << getTypename(getType()) << std::endl;
+             << " and " << getTypename(getType()) 
+             << " for uniform '" << getName() << "'"
+	     << std::endl;
     return false;
 }
 

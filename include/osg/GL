@@ -112,8 +112,8 @@
             #define GLuint64EXT GLuint64 
             #define GL_BGRA_EXT GL_BGRA 
         #else 
-            #include <GL3/gl3.h> 
             #define GL3_PROTOTYPES 1 
+            #include <GL3/gl3.h> 
         #endif
     #else
         #ifndef __gl_h_
